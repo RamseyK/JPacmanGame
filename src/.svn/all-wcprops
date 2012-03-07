@@ -1,0 +1,119 @@
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/3/trunk/JPacmanGame/src
+END
+GameObject.java
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/4/trunk/JPacmanGame/src/GameObject.java
+END
+EditorFrame.java
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/3/trunk/JPacmanGame/src/EditorFrame.java
+END
+JPacmanGame.java
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/3/trunk/JPacmanGame/src/JPacmanGame.java
+END
+StateMenu.java
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/3/trunk/JPacmanGame/src/StateMenu.java
+END
+Actor.java
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/4/trunk/JPacmanGame/src/Actor.java
+END
+Game.java
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/4/trunk/JPacmanGame/src/Game.java
+END
+StateGame.java
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/3/trunk/JPacmanGame/src/StateGame.java
+END
+Map.java
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/3/trunk/JPacmanGame/src/Map.java
+END
+State.java
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/3/trunk/JPacmanGame/src/State.java
+END
+PathFinder.java
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/3/trunk/JPacmanGame/src/PathFinder.java
+END
+Ghost.java
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/6/trunk/JPacmanGame/src/Ghost.java
+END
+AIManager.java
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/3/trunk/JPacmanGame/src/AIManager.java
+END
+StateScoreboard.java
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/3/trunk/JPacmanGame/src/StateScoreboard.java
+END
+StateEditor.java
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/3/trunk/JPacmanGame/src/StateEditor.java
+END
+EditorMarker.java
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/4/trunk/JPacmanGame/src/EditorMarker.java
+END
+AStarHeuristic.java
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/3/trunk/JPacmanGame/src/AStarHeuristic.java
+END
+Player.java
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/4/trunk/JPacmanGame/src/Player.java
+END
+Path.java
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/3/trunk/JPacmanGame/src/Path.java
+END
+Item.java
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/4/trunk/JPacmanGame/src/Item.java
+END

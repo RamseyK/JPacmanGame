@@ -1,0 +1,137 @@
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/3/trunk/JPacmanGame/doc/class-use
+END
+Map.html
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/4/trunk/JPacmanGame/doc/class-use/Map.html
+END
+PathFinder.SortedList.html
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/4/trunk/JPacmanGame/doc/class-use/PathFinder.SortedList.html
+END
+State.html
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/4/trunk/JPacmanGame/doc/class-use/State.html
+END
+StateScoreboard.html
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/4/trunk/JPacmanGame/doc/class-use/StateScoreboard.html
+END
+PathFinder.html
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/4/trunk/JPacmanGame/doc/class-use/PathFinder.html
+END
+AIManager.html
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/4/trunk/JPacmanGame/doc/class-use/AIManager.html
+END
+Ghost.html
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/4/trunk/JPacmanGame/doc/class-use/Ghost.html
+END
+StateEditor.html
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/4/trunk/JPacmanGame/doc/class-use/StateEditor.html
+END
+EditorMarker.html
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/4/trunk/JPacmanGame/doc/class-use/EditorMarker.html
+END
+AStarHeuristic.html
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/4/trunk/JPacmanGame/doc/class-use/AStarHeuristic.html
+END
+Player.html
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/4/trunk/JPacmanGame/doc/class-use/Player.html
+END
+Path.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/4/trunk/JPacmanGame/doc/class-use/Path.html
+END
+Item.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/4/trunk/JPacmanGame/doc/class-use/Item.html
+END
+GameObject.html
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/4/trunk/JPacmanGame/doc/class-use/GameObject.html
+END
+EditorFrame.html
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/4/trunk/JPacmanGame/doc/class-use/EditorFrame.html
+END
+JPacmanGame.html
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/4/trunk/JPacmanGame/doc/class-use/JPacmanGame.html
+END
+StateMenu.html
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/4/trunk/JPacmanGame/doc/class-use/StateMenu.html
+END
+Path.Step.html
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/4/trunk/JPacmanGame/doc/class-use/Path.Step.html
+END
+PathFinder.Node.html
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/4/trunk/JPacmanGame/doc/class-use/PathFinder.Node.html
+END
+Actor.html
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/4/trunk/JPacmanGame/doc/class-use/Actor.html
+END
+Game.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/4/trunk/JPacmanGame/doc/class-use/Game.html
+END
+StateGame.html
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/4/trunk/JPacmanGame/doc/class-use/StateGame.html
+END

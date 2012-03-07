@@ -1,0 +1,7 @@
+Resources Used
+
+Backed up in this folder in the event the online links go down.
+
+-A VERY detailed dossier on Pacman quirks: http://home.comcast.net/~jpittman2/pacman/pacmandossier.html
+-AStar Implementation by Kevin Glass (used in this program): http://www.cokeandcode.com/index.html?page=tutorials/tilemap2
+-Good read on Path Finding Heuristics: http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html 

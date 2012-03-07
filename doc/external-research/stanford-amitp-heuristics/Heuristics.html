@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "XSLT-compat">
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Heuristics</title><link rel="canonical" href="http://theory.stanford.edu/%7Eamitp/GameProgramming/Heuristics.html"><link rel="shortcut icon" href="http://www-cs-students.stanford.edu/%7Eamitp/favicon.ico"><link href="Heuristics_files/css.css" rel="stylesheet" type="text/css"><link rel="alternate" type="application/atom+xml" title="Blobs in Games - Atom" href="http://simblob.blogspot.com/feeds/posts/default"><meta name="verify-v1" content="82b+h1+tgwLrcTqTiJrqquMvoFVBwMwY11dx63m01zk="><meta name="robots" content="noodp"><link rel="stylesheet" href="Heuristics_files/main.css" type="text/css"><meta name="viewport" content="width=device-width"><link rel="apple-touch-icon" href="http://www-cs-students.stanford.edu/%7Eamitp/red_blob.gif"><style type="text/css"><!--
+  ol li { list-style-type: decimal; }
+  ol ol li { list-style-type: lower-alpha; }
+  ol ol ol li { list-style-type: lower-roman; }
+  div.figure { margin-left: 0em; text-align: center; }
+--></style><script src="Heuristics_files/embed.htm" async="" type="text/javascript"></script></head><body class="gameprog"><header><h1 role="banner">Heuristics<div class="subheading">From <a href="http://theory.stanford.edu/%7Eamitp/GameProgramming/">Amit’s Thoughts on Pathfinding</a></div></h1><nav role="navigation"><ul><li>Home:</li><li class="nav"><a rel="me" href="http://www-cs-students.stanford.edu/%7Eamitp/">Main →</a></li><li class="nav"><a href="http://amitp.blogspot.com/">Blog →</a></li><li class="nav omit-if-narrow"><a href="http://friendfeed.com/amitp">Links →</a></li><li><strong>Games:</strong></li><li class="nav navself"><a href="http://www-cs-students.stanford.edu/%7Eamitp/gameprog.html">Main
+                      →</a></li><li class="nav"><a href="http://simblob.blogspot.com/">Blog →</a></li><li class="nav omit-if-narrow"><a href="http://pinboard.in/u:amitp/t:gameprogramming/">Links →</a></li><li><form id="searchbox_015053491556836196840:0hqisdtq4p0" action="http://www.google.com/cse"><div style="text-align:center" role="search"><input name="cx" value="015053491556836196840:0hqisdtq4p0" type="hidden"><input id="query" name="q" size="15" placeholder="search" type="text"><input name="cof" value="FORID:9" type="hidden"><input name="siteurl" value="http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html" type="hidden"></div></form></li></ul></nav></header><div class="main" role="main"><div class="topic"><p>The heuristic function <code>h(n)</code> tells A* an <em>estimate</em> of the minimum cost from any vertex <code>n</code> to the goal. It’s important to choose a good heuristic function.</p></div><div class="h2banner"><h2 id="a-stars-use-of-the-heuristic">A*’s Use of the Heuristic</h2><div class="h2-curl-bottom"></div><div class="h2-curl-top"></div></div><div class="topic"><p>The heuristic can be used to control A*’s behavior.</p><ul><li>At one extreme, if <code>h(n)</code> is 0, then only <code>g(n)</code> plays a role, and A* turns into Dijkstra’s algorithm, which is guaranteed to find a shortest path.</li><li>If <code>h(n)</code> is always lower than (or equal to) the cost of moving from <code>n</code> to the goal, then A* is guaranteed to find a shortest path. The lower <code>h(n)</code> is, the more node A* expands, making it slower.</li><li>If <code>h(n)</code> is exactly equal to the cost of moving from <code>n</code>
+ to the goal, then A* will only follow the best path and never expand 
+anything else, making it very fast. Although you can’t make this happen 
+in all cases, you can make it exact in some special cases. It’s nice to 
+know that given perfect information, A* will behave perfectly.</li><li>If <code>h(n)</code> is sometimes greater than the cost of moving from <code>n</code> to the goal, then A* is not guaranteed to find a shortest path, but it can run faster.</li><li>At the other extreme, if <code>h(n)</code> is very high relative to <code>g(n)</code>, then only <code>h(n)</code> plays a role, and A* turns into Best-First-Search.</li></ul><div class="note" align="center"><strong>Note:</strong><br> Technically, the <strong>A*</strong> algorithm should be called simply <strong>A</strong> if the heuristic is an underestimate of the actual cost. However, I will continue to call it <strong>A*</strong> because the implementation is the same and the game programming community does not distinguish <strong>A</strong> from <strong>A*</strong>.<br></div><p>So
+ we have an interesting situation in that we can decide what we want to 
+get out of A*. At exactly the right point, we’ll get shortest paths 
+really quickly. If we’re too low, then we’ll continue to get shortest 
+paths, but it’ll slow down. If we’re too high, then we give up shortest 
+paths, but A* will run faster.</p><p>In a game, this property of A* can 
+be very useful. For example, you may find that in some situations, you 
+would rather have a “good” path than a “perfect” path. To shift the 
+balance between <code>g(n)</code> and <code>h(n)</code>, you can modify either one.</p></div><div class="h2banner"><h2 id="speed-or-accuracy">Speed or accuracy?</h2><div class="h2-curl-bottom"></div><div class="h2-curl-top"></div></div><div class="topic"><p>A*’s
+ ability to vary its behavior based on the heuristic and cost functions 
+can be very useful in a game. The tradeoff between speed and accuracy 
+can be exploited to make your game faster. For most games, you don’t <em>really</em> need the <strong>best</strong> path between two points. You just <a href="http://realtimecollisiondetection.net/blog/?p=56">need something that’s close</a>. What you need may depend on what’s going on in the game, or how fast the computer is.</p><p>Suppose
+ your game has two types of terrain, Flat and Mountain, and the movement
+ costs are 1 for flat land and 3 for mountains, A* is going to search 
+three times as far along flat land as it does along mountainous land. 
+This is because it’s <em>possible</em> that there is a path along flat 
+terrain that goes around the mountains. You can speed up A*’s search by 
+using 1.5 as the heuristic distance between two map spaces. A* will then
+ compare 3 to 1.5, and it won’t look as bad as comparing 3 to 1. It is 
+not as dissatisfied with mountainous terrain, so it won’t spend as much 
+time trying to find a way around it. Alternatively, you can speed up up 
+A*’s search by decreasing the amount it searches for paths around 
+mountains―just tell A* that the movement cost on mountains is 2 instead 
+of 3. Now it will search only twice as far along the flat terrain as 
+along mountainous terrain. Either approach gives up ideal paths to get 
+something quicker.</p><p>The choice between speed and accuracy does not 
+have to be static. You can choose dynamically based on the CPU speed, 
+the fraction of time going into pathfinding, the number of units on the 
+map, the importance of the unit, the size of the group, the difficulty 
+level, or any other factor. One way to make the tradeoff dynamic is to 
+build a heuristic function that assumes the minimum cost to travel one 
+grid space is 1 and then build a cost function that scales:</p><pre class="snippet">g'(n) = 1 + alpha * (g(n) - 1)
+</pre><p>If <code>alpha</code> is 0, then the modified cost function 
+will always be 1. At this setting, terrain costs are completely ignored,
+ and A* works at the level of simple passable/unpassable grid spaces. If
+ <code>alpha</code> is 1, then the original cost function will be used, and you get the full benefit of A*. You can set <code>alpha</code> anywhere in between.</p><p>You should also consider switching from the heuristic returning the <em>absolute</em> minimum cost to returning the <em>expected</em>
+ minimum cost. For example, if most of your map is grasslands with a 
+movement cost of 2 but some spaces on the map are roads with a movement 
+cost of 1, then you might consider having the heuristic assume no roads,
+ and return <code>2 * distance</code>.</p><p>The choice between speed 
+and accuracy does not have to be global. You can choose some things 
+dynamically based on the importance of having accuracy in some region of
+ the map. For example, it may be more important to choose a good path 
+near the current location, on the assumption that we might end up 
+recalculating the path or changing direction at some point, so why 
+bother being accurate about the faraway part of the path? Or perhaps 
+it’s not so important to have the shortest path in a safe area of the 
+map, but when sneaking past an enemy village, safety and quickness are 
+essential.</p></div><div class="h2banner"><h2 id="scale">Scale</h2><div class="h2-curl-bottom"></div><div class="h2-curl-top"></div></div><div class="topic"><p>A* computes <code>f(n) = g(n) + h(n)</code>. To add two values, those two values need to be at the same scale. If <code>g(n)</code> is measured in hours and <code>h(n)</code> is measured in meters, then A* is going to consider <code>g</code> or <code>h</code> too much or too little, and you either won’t get as good paths or you A* will run slower than it could.</p></div><div class="h2banner"><h2 id="exact-heuristics">Exact heuristics</h2><div class="h2-curl-bottom"></div><div class="h2-curl-top"></div></div><div class="topic"><p>If
+ your heuristic is exactly equal to the distance along the optimal path,
+ you’ll see A* expand very few nodes, as in the diagram shown in <a href="http://theory.stanford.edu/%7Eamitp/GameProgramming/Heuristics.html#manhattan-distance">the next section</a>. What’s happening inside A* is that it is computing <code>f(n) = g(n) + h(n)</code> at every node. When <code>h(n)</code> exactly matches <code>g(n)</code>, the value of <code>f(n)</code> doesn’t change along the path. All nodes not on the right path will have a higher value of <code>f</code> than nodes that are on the right path. Since A* doesn’t consider higher-valued <code>f</code> nodes until it has considered lower-valued <code>f</code> nodes, it never strays off the shortest path.</p><h3 id="precomputed-exact-heuristic">Precomputed exact heuristic</h3><p>One
+ way to construct an exact heuristic is to precompute the length of the 
+shortest path between every pair of points. This is not feasible for 
+most game maps. However, there are ways to approximate this heuristic:</p><ul><li>Fit a coarse grid on top of the fine grid. Precompute the shortest path between any pair of coarse grid locations.</li><li>Precompute the shortest path between any pair of <a href="http://theory.stanford.edu/%7Eamitp/GameProgramming/MapRepresentations.html#waypoints">waypoints</a>. This is a generalization of the coarse grid approach.</li></ul><p>Then add in a heuristic <code>h'</code>
+ that estimates the cost of going from any location to nearby waypoints.
+ (The latter too can be precomputed if desired.) The final heuristic 
+will be:</p><pre class="snippet">h(n) = h'(n, w1) + distance(w1, w2) + h'(w2, goal)
+</pre><p>or if you want a better but more expensive heuristic, evaluate the above with all pairs <code>w1</code>, <code>w2</code> that are close to the node and the goal, respectively.</p><h3 id="linear-exact-heuristic">Linear exact heuristic</h3><p>In
+ a special circumstance, you can make the heuristic exact without 
+precomputing anything. If you have a map with no obstacles and no slow 
+terrain, then the shortest path from the starting point to the goal 
+should be a straight line.</p><p>If you’re using a simple heuristic (one
+ which does not know about the obstacles on the map), it should match 
+the exact heuristic. If it doesn’t, then you may have a problem with 
+scale or the type of heuristic you chose.</p></div><div class="h2banner"><h2 id="heuristics-for-grid-maps">Heuristics for grid maps</h2><div class="h2-curl-bottom"></div><div class="h2-curl-top"></div></div><div class="topic"><p><span id="S7"></span> On a grid, there are well-known heuristic functions to use.</p><p><strong>Use the distance heuristic that matches the allowed movement:</strong></p><ul><li>On a square grid that allows <strong>4 directions</strong> of movement, use Manhattan distance (L<sub>1</sub>).</li><li>On a square grid that allows <strong>8 directions</strong> of movement, use Diagonal distance (L<sub>∞</sub>).</li><li>On a square grid that allows <strong>any direction</strong> of movement, you might or might not want Euclidean distance (L<sub>2</sub>).
+ If A* is finding paths on the grid but you are allowing movement not on
+ the grid, you may want to consider other representations of the map.</li><li>On a hexagon grid that allows <strong>6 directions</strong> of movement, use Manhattan distance <a href="http://3dmdesign.com/development/hexmap-coordinates-the-easy-way">adapted to hexagonal grids</a>.</li></ul><h3 id="manhattan-distance">Manhattan distance</h3><p>The standard heuristic for a square grid is the <a href="http://en.wikipedia.org/wiki/Taxicab_geometry">Manhattan distance</a>. Look at your cost function and find the minimum cost <code>D</code> for moving from one space to an adjacent space. The heuristic on a square grid where you can move in 4 directions should be <code>D</code> times the Manhattan distance:</p><pre class="snippet">h(n) = D * (abs(n.x-goal.x) + abs(n.y-goal.y))
+</pre><p>How do you pick D? Use a scale that matches your cost function.
+ For the best paths, and an “admissible” heuristic, set D to the lowest 
+cost between adjacent squares. In the absence of obstacles, and on 
+terrain that has the minimum movement cost D, moving one step closer to 
+the goal should <em>increase <code>g</code></em> by D and <em>decrease <code>h</code></em> by D. When you add the two, <code>f</code> (which is set to <code>g +
+h</code>) will stay the same; that’s a sign that the heuristic and cost 
+function scales match. You can also give up optimal paths to make A* run
+ faster by increasing D, or by decreasing the ratio between the lowest 
+and highest edge costs.</p><div class="figure"><img src="Heuristics_files/manhattan.png" alt="" height="226" width="526"></div><p>(Note: the above image has a <a href="http://theory.stanford.edu/%7Eamitp/GameProgramming/Heuristics.html#breaking-ties">tie-breaker</a> added to the heuristic.}</p><h3 id="diagonal-distance">Diagonal distance</h3><p>If your map allows diagonal movement you need a different heuristic (sometimes called the <a href="http://en.wikipedia.org/wiki/Chebyshev_distance">Chebyshev distance</a>).
+ The Manhattan distance for (4 east, 4 north) will be 8*D. However, you 
+could simply move (4 northeast) instead, so the heuristic should be 4*D.
+ This function handles diagonals, assuming that both straight and 
+diagonal movement costs D:</p><pre class="snippet">h(n) = D * max(abs(n.x-goal.x), abs(n.y-goal.y))
+</pre><div class="figure"><img src="Heuristics_files/diagonal.png" alt="" height="226" width="526"></div><p>If
+ the cost of diagonal movement is not D, but something like D2 = 
+sqrt(2)*D, the above heuristic won’t be right for you. You will instead 
+want something more sophisticated:</p><pre class="snippet">h_diagonal(n) = min(abs(n.x-goal.x), abs(n.y-goal.y))
+h_straight(n) = (abs(n.x-goal.x) + abs(n.y-goal.y))
+h(n) = D2 * h_diagonal(n) + D * (h_straight(n) - 2*h_diagonal(n)))
+</pre><p>Here we compute <code>h_diagonal(n) =</code> the number of steps you can take along a diagonal, <code>h_straight(n) =</code>
+ the Manhattan distance, and then combine the two by considering all 
+diagonal steps to cost D2, and then all remaining straight steps (note 
+that this is the number of straight steps in the Manhattan distance, 
+minus two straight steps for each diagonal step we took instead) cost D.</p><h3 id="euclidean-distance">Euclidean distance</h3><p>If your units can move at any angle (instead of grid directions), then you should probably use a straight line distance:</p><pre class="snippet">h(n) = D * sqrt((n.x-goal.x)^2 + (n.y-goal.y)^2)
+</pre><p>However, if this is the case, then you may have trouble with using A* directly because the cost function <code>g</code> will not match the heuristic function <code>h</code>.
+ Since Euclidean distance is shorter than Manhattan or diagonal 
+distance, you will still get shortest paths, but A* will take longer to 
+run:</p><div class="figure"><img src="Heuristics_files/euclidean.png" alt="" height="226" width="526"></div><h3 id="euclidean-distance-squared">Euclidean distance, squared</h3><p>I’ve
+ seen several A* web pages recommend that you avoid the expensive square
+ root in the Euclidean distance by just using distance-squared:</p><pre class="snippet">h(n) = D * ((n.x-goal.x)^2 + (n.y-goal.y)^2)
+</pre><p><strong>Do not do this!</strong> This definitely runs into the scale problem. The scale of <code>g</code> and <code>h</code> need to match, because you’re adding them together to form <code>f</code>. When A* computes <code>f(n) = g(n) + h(n)</code>, the square of distance will be much higher than the cost <code>g</code> and you will end up with an overestimating heuristic. For longer distances, this will approach the extreme of <code>g(n)</code> not contributing to <code>f(n)</code>, and A* will degrade into (Greedy) Best-First-Search:</p><div class="figure"><img src="Heuristics_files/best-first-search-trap.png" alt="" height="376" width="526"></div><p>To
+ attempt to fix this you can scale the heuristic down. However, then you
+ run into the opposite problem: for shorter distances, the heuristic 
+will be too small compared to <code>g(n)</code> and A* will degrade into Dijkstra’s algorithm.</p><p>If,
+ after profiling, you find the cost of the square root is significant, 
+either use a fast square root approximation with Euclidean distance or 
+use the diagonal distance as an approximation to Euclidean.</p><h3 id="breaking-ties">Breaking ties</h3><p>In
+ some maps there are many paths with the same length. For example, in 
+flat areas without variation in terrain, using a grid will lead to many 
+equal-length paths. A* might explore all the paths with the same <code>f</code>
+ value, instead of just one. (If you do have lots of such areas, there 
+might be other techniques that are better than using A* on a grid.)</p><div class="figure"><img src="Heuristics_files/tie-breaking-off.png" alt="" height="351" width="491"><br> Ties in <code>f</code> values.<br></div><p>To solve this problem, we need to either adjust the <code>g</code> or <code>h</code> values; it is usually easier to adjust <code>h</code>. The tie breaker needs to be deterministic with respect to the vertex (<em>i.e.,</em> it shouldn’t just be a random number), and it needs to make the <code>f</code> values differ. Since A* sorts by <code>f</code> value, making them different means only one of the “equivalent” <code>f</code> values will be explored.</p><p>One way to break ties is to nudge the scale of <code>h</code> slightly. If we scale it downwards, then <code>f</code>
+ will increase as we move towards the goal. Unfortunately, this means 
+that A* will prefer to expand vertices close to the starting point 
+instead of vertices close to the goal. We can instead scale <code>h</code> upwards slightly (even by 0.1%). A* will prefer to expand vertices close to the goal.</p><pre class="snippet">heuristic *= (1.0 + p)
+</pre><p>The factor <code>p</code> should be chosen so that <code>p &lt;</code><em>(minimum cost of taking one step)</em><code>/</code><em>(expected maximum path length)</em>.
+ Assuming that you don’t expect the paths to be more than 1000 steps 
+long, you can choose p = 1/1000. The result of this tie-breaking nudge 
+is that A* explores far less of the map than previously:</p><div class="figure"><img src="Heuristics_files/tie-breaking-scale-1.png" alt="" height="351" width="491"><br> Tie-breaking scaling added to heuristic.<br></div><p>When
+ there are obstacles of course it still has to explore to find a way 
+around them, but note that after the obstacle is passed, A* explores 
+very little:</p><div class="figure"><img src="Heuristics_files/tie-breaking-scale-2.png" alt="" height="351" width="491"><br> Tie-breaking scaling added to heuristic, works nicely with obstacles.<br></div><p>Steven van Dijk suggests that a more straightforward way to do this would to pass <code>h</code> to the comparison function. When the <code>f</code> values are equal, the comparison function would break the tie by looking at <code>h</code>.</p><p>Another
+ way to break ties is to compute a hash of the coordinates, and use that
+ to adjust the heuristic. This breaks more ties than adjusting <code>h</code> as above. Thanks to Cris Fuhrman for suggesting this.</p><p>A different way to break ties is to prefer paths that are along the straight line from the starting point to the goal:</p><pre class="snippet">dx1 = current.x - goal.x
+dy1 = current.y - goal.y
+dx2 = start.x - goal.x
+dy2 = start.y - goal.y
+cross = abs(dx1*dy2 - dx2*dy1)
+heuristic += cross*0.001
+</pre><p>This code computes the vector cross-product between the start 
+to goal vector and the current point to goal vector. When these vectors 
+don’t line up, the cross product will be larger. The result is that this
+ code will give some slight preference to a path that lies along the 
+straight line path from the start to the goal. When there are no 
+obstacles, A* not only explores less of the map, the path looks very 
+nice as well:</p><div class="figure"><img src="Heuristics_files/tie-breaking-cross-1.png" alt="" height="351" width="491"><br> Tie-breaking cross-product added to heuristic, produces pretty paths.<br></div><p>However,
+ because this tie-breaker prefers paths along the straight line from the
+ starting point to the goal, weird things happen when going around 
+obstacles (note that the path is still optimal; it just looks strange):</p><div class="figure"><img src="Heuristics_files/tie-breaking-cross-2.png" alt="" height="351" width="491"><br> Tie-breaking cross-product added to heuristic, less pretty with obstacles.<br></div><p>To interactively explore the improvement from this tie breaker, see <a href="http://www.ccg.leeds.ac.uk/people/j.macgill/xaStar/">James Macgill’s A* applet</a> [or try <a href="http://www.vision.ee.ethz.ch/%7Ecvcourse/astar/AStar.html">this mirror</a> or <a href="http://web.archive.org/web/www.ccg.leeds.ac.uk/james/aStar/">this mirror</a>].
+ Use “Clear” to clear the map, and choose two points on opposite corners
+ of the map. When you use the “Classic A*” method, you will see the 
+effect of ties. When you use the “Fudge” method, you will see the effect
+ of the above cross product added to the heuristic.</p><p>Yet another way to break ties is to carefully construct your A* priority queue so that <em>new</em> insertions with a specific <code>f</code> value are always ranked better (lower) than <em>old</em> insertions with the same <code>f</code> value.</p><p>You may also want to read about the <a href="http://home1.stofanet.dk/breese/papers.html">AlphA* algorithm</a>,
+ which has a more sophisticated way to break ties, yet still maintain 
+bounds on the optimality of the resulting path. AlphA* is adaptive and 
+is likely to perform better than either of the two tie-breakers I 
+described above. However, the tie-breakers I described are extremely 
+easy to implement, so start with them first, and try AlphA* if you need 
+something better.</p><h3 id="searching-for-an-area">Searching for an area</h3><p>If you want to search for any spot near some goal, instead of one particular space, you could construct a heuristic <code>h'(x)</code> that is the minimum of <code>h1(x), h2(x), h3(x), ...</code> where <code>h1, h2, h3</code>
+ are heuristics to each of the nearby spots. However, a faster way is to
+ just let A* search for the center of the goal area. Once you pull <em>any</em> nearby space from the OPEN set, you can stop and construct a path.</p></div><div class="astar-nav"><span>Back: <a rel="prev" href="http://theory.stanford.edu/%7Eamitp/GameProgramming/AStarComparison.html">Introduction to A*</a></span><span>Up: <a href="http://theory.stanford.edu/%7Eamitp/GameProgramming/index.html">Home</a></span><span>Next: <a rel="next" href="http://theory.stanford.edu/%7Eamitp/GameProgramming/ImplementationNotes.html">Implementation</a></span></div></div><div class="divider"></div><div class="divider-disqus" style="font-size:large">
+          Email me at <a class="email" href="mailto:amitp@cs.stanford.edu">amitp@cs.stanford.edu</a>, or post a public comment:
+        </div><div class="comments main" role="complementary"><div id="disqus_thread"></div><script type="text/javascript">
+            (function() {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://blobs.disqus.com/embed.js';
+            /* dsq.src = 'http://disqus.com/forums/blobs/embed.js'; */
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+          </script><noscript><a href="http://blobs.disqus.com/?url=ref">View the discussion thread.</a></noscript></div><div class="footer" role="contentinfo"><div style="float:left;width:30em"><address>
+		  Copyright © 2011
+		  <span class="vcard"><a rel="copyright" class="url fn n" href="http://www-cs-students.stanford.edu/%7Eamitp/"><span class="given-name"> Amit </span><span class="additional-name"> J </span><span class="family-name"> Patel</span></a>,
+		    <a class="email" href="mailto:amitp@cs.stanford.edu">amitp@cs.stanford.edu</a></span></address></div><div style="text-align:right">From <a href="http://www-cs-students.stanford.edu/%7Eamitp/gameprog.html">Amit’s Game Programming Site</a><br>Last modified: Sat Nov 19 09:31:03 2011</div><!-- Start of counters --><script type="text/javascript"><!--
+                  var sc_project=417499;
+                  var sc_invisible=1;
+                  var sc_security="";
+(function() {
+      var ga = document.createElement('script');
+      ga.type = 'text/javascript'; ga.async = true;
+      ga.src = 'http://www.statcounter.com/counter/counter_xhtml.js';
+      document.getElementsByTagName('body')[0].appendChild(ga);
+  })();
+                //--></script><noscript><div class="statcounter"><a class="statcounter" href="http://www.statcounter.com/"><img class="statcounter" src="http://c.statcounter.com/417499/0//1/" alt=""></a></div></noscript><script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount',
+    'UA-79181-1'
+    ]);
+      
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script');
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' :
+        'http://www') + '.google-analytics.com/ga.js';
+    ga.async = true;
+    document.getElementsByTagName('body')[0].appendChild(ga);
+  })();
+
+</script><!-- End of counters --></div><script src="Heuristics_files/counter_xhtml.js" async="" type="text/javascript"></script><script async="" src="Heuristics_files/ga.js"></script>
+</body></html>
