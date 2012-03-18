@@ -76,8 +76,14 @@ public class AIManager {
 		
 		// Determine if ghosts are fearful of the player
 		boolean fear = false;
-		if(map.getPlayer().isPoweredUp())
+		boolean fearBlink = false;
+		if(map.getPlayer().isPoweredUp()) {
 			fear = true;
+			// Fear-blink occurs when theres <= 2 seconds left of the players power up (ghosts will start to blink in color)
+			long tl = map.getPlayer().getPoweredExpireTime()-System.currentTimeMillis();
+			if(tl <= 2000)
+				fearBlink = true;
+		}
 		
 		// Release the next ghost
 		if(System.currentTimeMillis() > nextReleaseTime) {
@@ -110,6 +116,7 @@ public class AIManager {
 				ghost.move(x, y);
 				ghost.setTrapped(true);
 				ghost.setDead(false);
+				ghost.setFear(false, false);
 			}
 			
 			// Any ghost not trapped is given the current fear status
@@ -117,9 +124,9 @@ public class AIManager {
 				// If fear switches from false to true for this ghost, abandon their current (and likely) chase path
 				if(!ghost.isInFear() && fear)
 					ghost.updatePath(null);
-				ghost.setFear(fear);
+				ghost.setFear(fear, fearBlink);
 			} else {
-				ghost.setFear(false);
+				ghost.setFear(false, false);
 			}
 			
 			// Develop path for ghost
