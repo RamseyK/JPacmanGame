@@ -11,7 +11,7 @@ public class PathFinder {
 	/** The set of nodes that have been searched through */
 	private ArrayList<Node> closed;
 	/** The set of nodes that we do not yet consider fully searched */
-	private SortedList open = new SortedList();
+	private SortedList<Node> open = new SortedList<Node>();
 	
 	/** The map being searched */
 	private Map map;
@@ -20,7 +20,7 @@ public class PathFinder {
 	
 	/** The complete set of nodes across the map */
 	private Node[][] nodes;
-	/** True if we allow diaganol movement */
+	/** True if we allow diagonal movement */
 	private boolean allowDiagMovement;
 	/** The heuristic we're applying to determine which nodes to search first */
 	private AStarHeuristic heuristic;
@@ -30,7 +30,7 @@ public class PathFinder {
 	 * 
 	 * @param map The map to be searched
 	 * @param maxSearchDistance The maximum depth we'll search before giving up
-	 * @param allowDiagMovement True if the search should try diaganol movement
+	 * @param allowDiagMovement True if the search should try diagonal movement
 	 */
 	public PathFinder(Map map, int maxSearchDistance, boolean allowDiagMovement) {
 		this(map, maxSearchDistance, allowDiagMovement, new AStarHeuristic());
@@ -42,7 +42,7 @@ public class PathFinder {
 	 * @param heuristic The heuristic used to determine the search order of the map
 	 * @param map The map to be searched
 	 * @param maxSearchDistance The maximum depth we'll search before giving up
-	 * @param allowDiagMovement True if the search should try diaganol movement
+	 * @param allowDiagMovement True if the search should try diagonal movement
 	 */
 	public PathFinder(Map map, int maxSearchDistance, boolean allowDiagMovement, AStarHeuristic heuristic) {
 		this.heuristic = heuristic;
@@ -62,7 +62,7 @@ public class PathFinder {
 	
 	/**
 	 * Find a path from the starting location provided (sx,sy) to the target
-	 * location (tx,ty) avoiding blockages and attempting to honour costs 
+	 * location (tx,ty) avoiding blockages and attempting to honor costs 
 	 * provided by the tile map.
 	 * 
 	 * @param mover The entity that will be moving along the path. This provides
@@ -84,7 +84,6 @@ public class PathFinder {
 		}
 		
 		// initial state for A*. The closed group is empty. Only the starting
-
 		// tile is in the open list and it'e're already there
 		nodes[sx][sy].cost = 0;
 		nodes[sx][sy].depth = 0;
@@ -98,7 +97,6 @@ public class PathFinder {
 		int maxDepth = 0;
 		while ((maxDepth < maxSearchDistance) && (open.size() != 0)) {
 			// pull out the first node in our open list, this is determined to 
-
 			// be the most likely to be the next step based on our heuristic
 
 			Node current = getFirstInOpen();
@@ -109,20 +107,18 @@ public class PathFinder {
 			removeFromOpen(current);
 			addToClosed(current);
 			
-			// search through all the neighbours of the current node evaluating
-
+			// search through all the neighbors of the current node evaluating
 			// them as next steps
 
 			for (int x=-1;x<2;x++) {
 				for (int y=-1;y<2;y++) {
-					// not a neighbour, its the current tile
+					// not a neighbor, its the current tile
 
 					if ((x == 0) && (y == 0)) {
 						continue;
 					}
 					
-					// if we're not allowing diaganol movement then only 
-
+					// if we're not allowing diagonal movement then only 
 					// one of x or y can be set
 
 					if (!allowDiagMovement) {
@@ -131,16 +127,14 @@ public class PathFinder {
 						}
 					}
 					
-					// determine the location of the neighbour and evaluate it
+					// determine the location of the neighbor and evaluate it
 
 					int xp = x + current.x;
 					int yp = y + current.y;
 					
 					if (isValidLocation(mover,sx,sy,xp,yp)) {
 						// the cost to get to this node is cost the current plus the movement
-
-						// cost to reach this node. Note that the heursitic value is only used
-
+						// cost to reach this node. Note that the heuristic value is only used
 						// in the sorted open list
 
 						float nextStepCost = current.cost + getMovementCost(mover, current.x, current.y, xp, yp);
@@ -148,10 +142,8 @@ public class PathFinder {
 						//map.pathFinderVisited(xp, yp);
 						
 						// if the new cost we've determined for this node is lower than 
-
 						// it has been previously makes sure the node hasn'e've
 						// determined that there might have been a better path to get to
-
 						// this node so it needs to be re-evaluated
 
 						if (nextStepCost < neighbour.cost) {
@@ -164,9 +156,7 @@ public class PathFinder {
 						}
 						
 						// if the node hasn't already been processed and discarded then
-
 						// reset it's cost to our current cost and add it as a next possible
-
 						// step (i.e. to the open list)
 
 						if (!inOpenList(neighbour) && !(inClosedList(neighbour))) {
@@ -323,12 +313,13 @@ public class PathFinder {
 	
 	/**
 	 * A simple sorted list
+	 * 3/18/12 (ramsey): Modified to require a type that implements the Comparable interface
 	 *
 	 * @author kevin
 	 */
-	private class SortedList {
+	private class SortedList<T extends Comparable<T>> {
 		/** The list of elements */
-		private ArrayList list = new ArrayList();
+		private ArrayList<T> list = new ArrayList<T>();
 		
 		/**
 		 * Retrieve the first element from the list
@@ -351,7 +342,7 @@ public class PathFinder {
 		 * 
 		 * @param o The element to add
 		 */
-		public void add(Object o) {
+		public void add(T o) {
 			list.add(o);
 			Collections.sort(list);
 		}
@@ -361,7 +352,7 @@ public class PathFinder {
 		 * 
 		 * @param o The element to remove
 		 */
-		public void remove(Object o) {
+		public void remove(T o) {
 			list.remove(o);
 		}
 	
@@ -380,7 +371,7 @@ public class PathFinder {
 		 * @param o The element to search for
 		 * @return True if the element is in the list
 		 */
-		public boolean contains(Object o) {
+		public boolean contains(T o) {
 			return list.contains(o);
 		}
 	}
@@ -388,7 +379,7 @@ public class PathFinder {
 	/**
 	 * A single node in the search graph
 	 */
-	private class Node implements Comparable<Object> {
+	private class Node implements Comparable<Node> {
 		/** The x coordinate of the node */
 		private int x;
 		/** The y coordinate of the node */
@@ -429,11 +420,10 @@ public class PathFinder {
 		/**
 		 * @see Comparable#compareTo(Object)
 		 */
-		public int compareTo(Object other) {
-			Node o = (Node) other;
-			
+		public int compareTo(Node other) {
+
 			float f = heuristic + cost;
-			float of = o.heuristic + o.cost;
+			float of = other.heuristic + other.cost;
 			
 			if (f < of) {
 				return -1;

@@ -2,23 +2,16 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 /**
- * StateScoreboard is a mode of the program that allows the user to view (and sometimes modify) scores set in StateGame
+ * StateScoreboard is a mode of the program that allows the user to view HighScores in the ScoreFile
  * StateScoreboard is a subclass of State
  * 
  * @author Ramsey Kant
  */
 public class StateScoreboard extends State {
-	
-	private String[] names;
-	private int[] scores;
-	private int numScores;
+
+	private ScoreFile g_scoreFile;
 
 	/**
 	 * Class Constructor
@@ -26,34 +19,27 @@ public class StateScoreboard extends State {
 	 */
 	public StateScoreboard(Game g) {
 		super(g);
+		g_scoreFile = g.getScoreFile();
 	}
 	
 	// Public Functions
 	
 	/**
-	 * Setup the scoreboard by loading the current score file
+	 * Setup the scoreboard by pulling score data from the games Scores class
 	 * 
 	 * @see State#reset()
 	 */
 	@Override
 	public void reset() {
-		// Only the top 10 scores will be displayed
-		names = new String[10];
-		scores = new int[10];
-		numScores = 0;
-		
-		// Read in the scores
-		//readScores();
 	}
 
 	/**
-	 * Cleanup objects and write back the scores
+	 * Cleanup objects
 	 * 
 	 * @see State#end()
 	 */
 	@Override
 	public void end() {
-		//saveScores();
 	}
 
 	/**
@@ -71,78 +57,20 @@ public class StateScoreboard extends State {
 		g.fillArc(960, 92, 100, 100, 35, 270);
 		g.fillRect(150, 200, 910, 5);
 		
-		g.setFont(new Font("Comic Sans MS", Font.BOLD, 24));
+		// Draw "back to main menu" text at the bottom left
+		g.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
+		g.drawString("(m) Main Menu", 50, 900);
 		
 		// Draw scores
-		for(int i = 0; i < names.length; i++) {
-			if(names[i] == null)
-				continue;
-			
-			g.drawString(names[i], 150, 210);
-			g.drawString(scores[i] + " ", 960, 210);
-		}
-	}
-	
-	/**
-	 * Output names and corresponding scores to the pacman.scores file
-	 */
-	public void saveScores() {
-		FileOutputStream fout;
-		DataOutputStream data;
+		g.setColor(Color.WHITE);
+		g.setFont(new Font("Comic Sans MS", Font.BOLD, 24));
 		
-		try {
-			fout = new FileOutputStream("pacman.scores");
-			data = new DataOutputStream(fout);
-			
-			// Write the score file magic
-			data.writeUTF("RKPACSCORES");
-			
-			// Write # of scores in the file, then the actual scores
-			data.writeInt(numScores);
-			for(int i = 0; i < numScores; i++) {
-				if(names[i] == null)
-					break;
-				data.writeUTF(names[i]);
-				data.writeInt(scores[i]);
-			}
-			
-			data.close();
-			fout.close();
-		} catch(IOException e) {
-			System.out.println("Failed to write score file: " + e.getMessage());
-		}
-	}
-	
-	/**
-	 * Populate names and scores from the pacman.scores file
-	 */
-	public void readScores() {
-		FileInputStream fin;
-		DataInputStream data;
-		
-		try {
-			fin = new FileInputStream("pacman.scores");
-			data = new DataInputStream(fin);
-			
-			// Check for the magic
-			if(!data.readUTF().equals("RKPACSCORES")) {
-				System.out.println("Not a score file!");
-				return;
-			}
-			
-			// Read in scores
-			numScores = data.readInt();
-			if (numScores > 10)
-				numScores = 10;
-			for(int i = 0; i < numScores; i++) {
-				names[i] = data.readUTF();
-				scores[i] = data.readInt();
-			}
-			
-			data.close();
-			fin.close();
-		} catch(IOException e) {
-			System.out.println("Failed to read score file: " + e.getMessage());
+		int numScores = g_scoreFile.getNumScores();
+		Score s = null;
+		for(int i = 0; i < numScores; i++) {
+			s = g_scoreFile.getScore(i);
+			g.drawString((i+1) + ". " + s.getName(), 150, 240+(i*40));
+			g.drawString(s.getScore() + " ", 960, 240+(i*40));
 		}
 	}
 	
@@ -156,7 +84,7 @@ public class StateScoreboard extends State {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		switch(e.getKeyCode()) {
-			case KeyEvent.VK_0:
+			case KeyEvent.VK_M:
 				game.requestChangeState(STATE_MENU);
 				break;
 			default:

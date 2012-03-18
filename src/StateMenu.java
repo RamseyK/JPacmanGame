@@ -44,12 +44,6 @@ public class StateMenu extends State {
 		
 		// Apply the filter
 		mapList = dir.list(filter);
-		
-		if(mapList == null) {
-			System.out.println("No maps exist!");
-			game.requestChangeState(STATE_EXITING);
-			return;
-		}
 	}
 
 	/**

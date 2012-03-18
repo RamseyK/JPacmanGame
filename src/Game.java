@@ -11,6 +11,7 @@ import java.awt.image.BufferStrategy;
  * 
  * @author Ramsey Kant
  */
+@SuppressWarnings("serial")
 public class Game extends Canvas {
 	// Debug vars
 	private boolean debugEnabled;
@@ -22,7 +23,7 @@ public class Game extends Canvas {
 	private Frame frame;
 	public final int RES_X;
 	public final int RES_Y;
-	private BufferStrategy m_gBuffer;
+	private BufferStrategy gfxBuffer;
 	
 	// State
 	private int stateId;
@@ -30,6 +31,9 @@ public class Game extends Canvas {
 	private boolean changeStateRequested;
 	private int requestedState;
 	private String startMap;
+
+	// Score file - global tracker of game scores
+	private ScoreFile scoreFile;
 	
 	/**
 	 * Class Constructor
@@ -78,7 +82,10 @@ public class Game extends Canvas {
 		// Setup double buffering
 		setIgnoreRepaint(true); // We'll handle repainting
 		createBufferStrategy(2);
-		m_gBuffer = getBufferStrategy();
+		gfxBuffer = getBufferStrategy();
+
+		// Load the scores file
+		scoreFile = new ScoreFile();
 		
 		runMainThread = true;
 	}
@@ -100,7 +107,7 @@ public class Game extends Canvas {
 	 * @return The Graphics2D buffer
 	 */
 	public Graphics2D getGraphicsContext() {
-		return (Graphics2D) m_gBuffer.getDrawGraphics();
+		return (Graphics2D) gfxBuffer.getDrawGraphics();
 	}
 	
 	/**
@@ -119,6 +126,15 @@ public class Game extends Canvas {
 	 */
 	public void setStartMap(String m) {
 		startMap = m;
+	}
+
+	/**
+	 * Get the global Score-file representation that interfaces directly with the .scores file
+	 * 
+	 * @return Score ScoreFile class instance
+	 */
+	public ScoreFile getScoreFile() {
+		return scoreFile;
 	}
 	
 	/**
@@ -173,11 +189,11 @@ public class Game extends Canvas {
 			
 			// Show the new buffer
 			g.dispose();
-			m_gBuffer.show();
+			gfxBuffer.show();
 			
-			// Syncronize framerate
+			// Synchronize framerate
 			try {
-				Thread.sleep(10); // Rate
+				Thread.sleep(20); // Rate
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -204,21 +220,13 @@ public class Game extends Canvas {
 		// Set the new state type
 		stateId = state;
 		
-		// Instance the new state (reset() is called in the construtor)
+		// Instance the new state (reset() is called in the constructor)
 		switch(stateId) {
 			case State.STATE_GAME:
 				currentState = new StateGame(this);
 				break;
 			case State.STATE_SCOREBOARD:
 				currentState = new StateScoreboard(this);
-				/*StateGame sb = new StateScoreboard();
-				int newScore = 0;
-				
-				// If the previous state was STATE_GAME, pull the session score and pass it to the scoreboard
-				if(currentState instanceof StateGame)
-					sb.addScore((int)((StateGame)currentState).getSessionScore()));
-				
-				currentState = sb;*/
 				break;
 			case State.STATE_EDITOR:
 				currentState = new StateEditor(this);

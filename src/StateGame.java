@@ -52,7 +52,7 @@ public class StateGame extends State {
 	/**
 	 * Reset the state of the game entirely (level 1)
 	 * 
-	 * @see State#reset()
+	 * @see State#respawn()
 	 */
 	@Override
 	public void reset() {
@@ -60,7 +60,7 @@ public class StateGame extends State {
 		mapName = game.getStartMap();
 		currentLevel = 0;
 		sessionScore = 0;
-		livesRemaining = 99;
+		livesRemaining = 3;
 		pauseTime = 0;
 		
 		// Respawn (start level 1)
@@ -97,7 +97,7 @@ public class StateGame extends State {
 			// Setup AI
 			ai = new AIManager(map, player, game.isDebugEnabled());
 			
-			// Slighly increase the game speed 
+			// Slightly increase the game speed 
 			
 		} else { // Player died, reset the map
 			// Move all actors back to their spawn positions
@@ -107,8 +107,11 @@ public class StateGame extends State {
 				if(a != null) {
 					a.move(a.getSpawnX(), a.getSpawnY());
 					a.setDead(false);
-					if(a.getType() == GameObject.OBJECT_GHOST)
-						((Ghost)a).updatePath(null);
+					if(a.getType() == GameObject.OBJECT_GHOST) {
+						Ghost g = (Ghost)a;
+						g.updatePath(null);
+						g.setTrapped(g.isOriginalTrapped());
+					}
 				}
 			}
 		}
@@ -134,7 +137,7 @@ public class StateGame extends State {
 		g.setColor(Color.WHITE);
 		g.setFont(new Font("Comic Sans MS", Font.BOLD, 24));
 		g.drawString("PACMAN by Ramsey Kant", 925, 50);
-		g.drawString("Score: " + player.getScore(), 1000, 100);
+		g.drawString("Level Score: " + player.getLvlScore(), 1000, 100);
 		g.drawString("Total: " + sessionScore, 1000, 150);
 		g.drawString("Lives: " + livesRemaining, 1000, 200);
 		g.drawString("Level: " + currentLevel, 1000, 250);
@@ -237,13 +240,16 @@ public class StateGame extends State {
 			g.setColor(Color.RED);
 			g.setFont(new Font("Comic Sans MS", Font.BOLD, 24));
 			g.drawString("PAUSED", 1000, 500);
+			
+			// Pause timer is in effect, display the time remaining on the screen
 			if(pauseTime > System.currentTimeMillis())
 				g.drawString("Pause ends in..." + ((pauseTime-System.currentTimeMillis())/1000), 1000, 550);
+			
+			// Pause timer is up, toggle the pause to the off state
 			if(pauseTime != 0 && System.currentTimeMillis() > pauseTime) {
 				pauseTime = 0;
 				gamePaused = false;
 			}
-			return;
 		}
 	}
 	
@@ -266,7 +272,7 @@ public class StateGame extends State {
 	 * @see StateGame#logic()
 	 */
 	public void win() {
-		sessionScore += player.getScore();
+		sessionScore += player.getLvlScore();
 		
 		respawn(true);
 	}
@@ -279,12 +285,15 @@ public class StateGame extends State {
 	 */
 	public void lose() {
 		livesRemaining--;
+		sessionScore += player.getLvlScore();
 		
 		if(livesRemaining > 0) {
 			respawn(false);
-		} else {
-			if(currentLevel == 1)
-				sessionScore = player.getScore(); // win() never called, so score is the 1st level score
+		} else {			
+			// Add to scores list
+			game.getScoreFile().addScore("Player", sessionScore);
+			
+			// Switch to scoreboard screen
 			game.requestChangeState(State.STATE_SCOREBOARD);
 		}
 	}

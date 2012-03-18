@@ -2,8 +2,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
-import javax.swing.JInternalFrame;
-
 /**
  * The StateEditor is a mode of the program that allows the user to create and modify map files that can be played in StateGame.
  * StateEditor is a subclass of State

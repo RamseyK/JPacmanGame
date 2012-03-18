@@ -2,7 +2,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 /**
- * Item objects are GameObject's that can be manipulated by the Player on the map (teleports, dots, powerups, fruit)
+ * Item objects are GameObject's that can be manipulated by an Actor on the map (teleports, dots, powerups, fruit)
  * Item is a subclass of GameObject
  * 
  * @author Ramsey Kant
@@ -74,11 +74,11 @@ public class Item extends GameObject {
 		// Perform action based on type
 		switch(objType) {
 			case OBJECT_DOT:
-				pl.incrementScore(10);
+				pl.incrementLvlScore(10);
 				destroy = true;
 				break;
 			case OBJECT_POWERUP:
-				pl.incrementScore(50);
+				pl.incrementLvlScore(50);
 				pl.setPowerUp(true);
 				destroy = true;
 				break;

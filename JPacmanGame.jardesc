@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jardesc>
+    <jar path="JPacmanGame/build/JPacman.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/JPacmanGame/JPacmanGame.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="false" manifestLocation="/JPacmanGame/manifest" manifestVersion="1.0" reuseManifest="true" saveManifest="true" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="true" exportOutputFolder="false">
+        <file path="/JPacmanGame/test-custom1.map"/>
+        <file path="/JPacmanGame/LICENSE.TXT"/>
+        <javaElement handleIdentifier="=JPacmanGame/src&lt;"/>
+        <file path="/JPacmanGame/default.map"/>
+        <file path="/JPacmanGame/README"/>
+    </selectedElements>
+</jardesc>

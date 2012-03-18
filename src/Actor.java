@@ -9,7 +9,8 @@ import java.awt.Graphics2D;
  */
 public class Actor extends GameObject {
 	
-	// Direction constants
+	// Speed & Direction constants
+	public static final float SPEED_DEFAULT = 8.0f;
 	public static final int MOVE_NONE = 0;
 	public static final int MOVE_UP = 1;
 	public static final int MOVE_RIGHT = 2;
@@ -50,7 +51,7 @@ public class Actor extends GameObject {
 		dirOrient = 0;
 		deltaX = 0;
 		deltaY = 0;
-		speed = 5;
+		speed = SPEED_DEFAULT;
 	}
 	
 	// Getters and Setters

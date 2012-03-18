@@ -21,6 +21,7 @@ public class Map {
 	private byte collideMap[][];
 	private Item itemMap[][];
 	private ArrayList<Actor> actorList;
+	private Player player;
 	private int dotsRemaining;
 
 	/**
@@ -118,6 +119,19 @@ public class Map {
 	}
 	
 	/**
+	 * Check's if a coordinate pair is within valid bounds for this map
+	 * 
+	 * @param x X-coordinate component to check
+	 * @param y Y-coordinate component to check
+	 * @return boolean True if the coordinate pair is valid, false if otherwise
+	 */
+	public boolean inBounds(int x, int y) {
+		if(x < 0 || y < 0 || x >= mapWidth || y >= mapHeight)
+			return false;
+		return true;
+	}
+	
+	/**
 	 * Add a collidable (by type) to the collideMap
 	 * 
 	 * @param x X coordinate
@@ -152,7 +166,7 @@ public class Map {
 		// Check bounds
 		int x = item.getX();
 		int y = item.getY();
-		if(x < 0 || y < 0 || x >= mapWidth || y >= mapHeight)
+		if(!inBounds(x,y))
 			return false;
 		
 		// Add to the itemMap
@@ -175,11 +189,16 @@ public class Map {
 		// Check bounds
 		int x = act.getX();
 		int y = act.getY();
-		if(x < 0 || y < 0 || x >= mapWidth || y >= mapHeight)
+		if(!inBounds(x,y))
 			return false;
 		
 		// Add to the array list
 		actorList.add(act);
+		
+		// If the actor is a player, store a reference to it (used for faster access)
+		if(act.getType() == GameObject.OBJECT_PLAYER)
+			player = (Player)act;
+		
 		return true;
 	}
 	
@@ -188,11 +207,11 @@ public class Map {
 	 * 
 	 * @param x X Coordinate
 	 * @param y Y Coordinate
-	 * @return Integer that represents the collision object
+	 * @return Integer that represents the collision object. -1 if invalid coordinate provided
 	 */
 	public byte getCollidable(int x, int y) {
 		// Check bounds
-		if(x < 0 || y < 0 || x >= mapWidth || y >= mapHeight)
+		if(!inBounds(x,y))
 			return -1;
 		
 		return collideMap[x][y];
@@ -203,11 +222,11 @@ public class Map {
 	 * 
 	 * @param x X Coordinate
 	 * @param y Y Coordinate
-	 * @return Item the item that is found at (x,y)
+	 * @return Item the item that is found at (x,y). 
 	 */
 	public Item getItem(int x, int y) {
 		// Check bounds
-		if(x < 0 || y < 0 || x >= mapWidth || y >= mapHeight)
+		if(!inBounds(x,y))
 			return null;
 		
 		return itemMap[x][y];
@@ -217,7 +236,7 @@ public class Map {
 	 * Return an actor at index in the actorList ArrayList
 	 * 
 	 * @param idx Index in actorList
-	 * @return Actor (null if non-existant)
+	 * @return Actor (null if non-existent)
 	 */
 	public Actor getActor(int idx) {
 		Actor act = null;
@@ -230,18 +249,12 @@ public class Map {
 	}
 	
 	/**
-	 * Find and return the player object within the local actorList ArrayList
+	 * Return the current reference to the player object on the map
 	 * 
-	 * @return The player object. null if not found
+	 * @return The player object
 	 */
 	public Player getPlayer() {
-		// Get from the object map
-		for(Actor g : actorList) {
-			if(g.getType() == GameObject.OBJECT_PLAYER)
-				return (Player)g;
-		}
-		
-		return null;
+		return player;
 	}
 	
 	/**
@@ -254,7 +267,7 @@ public class Map {
 	 */
 	public Actor getActor(int x, int y, boolean notPlayer) {
 		// Check bounds
-		if(x < 0 || y < 0 || x >= mapWidth || y >= mapHeight)
+		if(!inBounds(x,y))
 			return null;
 		
 		// Get from the object map
@@ -309,7 +322,7 @@ public class Map {
 		boolean rm = false;
 		
 		// Check bounds
-		if(x < 0 || y < 0 || x >= mapWidth || y >= mapHeight)
+		if(!inBounds(x,y))
 			return false;
 		
 		// Remove any collidable
@@ -359,7 +372,7 @@ public class Map {
 	 */
 	public boolean isEmpty(int x, int y) {
 		// Check bounds
-		if(x < 0 || y < 0 || x >= mapWidth || y >= mapHeight)
+		if(!inBounds(x,y))
 			return false;
 		
 		// Check if the Object is hitting something on the collideMap
@@ -390,7 +403,7 @@ public class Map {
 			return false;
 		
 		// Check bounds
-		if(x < 0 || y < 0 || x >= mapWidth || y >= mapHeight)
+		if(!inBounds(x,y))
 			return false;
 		
 		// Check if the Object is hitting something on the collideMap

@@ -9,7 +9,7 @@ import java.awt.Graphics2D;
  */
 public class Player extends Actor {
 	// State
-	private int m_iScore; // Current score - Only valid for the current life / level. StateGame will pull this on death or on level change
+	private int levelScore; // Current score - Only valid for the current life / level. StateGame will pull this on death or on level change
 	private boolean isPowered; // Powered up
 	private long poweredExpireTime;
 	
@@ -24,7 +24,7 @@ public class Player extends Actor {
 		super(OBJECT_PLAYER, Color.yellow, m, x, y);
 		
 		// State
-		m_iScore = 0;
+		levelScore = 0;
 		isPowered = false;
 		poweredExpireTime = 0;
 	}
@@ -37,8 +37,8 @@ public class Player extends Actor {
 	 * 
 	 * @param amt Amount to increment
 	 */
-	public void incrementScore(int amt) {
-		m_iScore += amt;
+	public void incrementLvlScore(int amt) {
+		levelScore += amt;
 	}
 	
 	/**
@@ -46,8 +46,8 @@ public class Player extends Actor {
 	 * 
 	 * @return the score
 	 */
-	public int getScore() {
-		return m_iScore;
+	public int getLvlScore() {
+		return levelScore;
 	}
 	
 	/**
@@ -60,7 +60,16 @@ public class Player extends Actor {
 	}
 	
 	/**
-	 * Set powered up state and start the expirtation time for when the powerup wears off
+	 * Returns the time at which the Player's powered-up state expires
+	 * 
+	 * @return long System time at which the power up expires
+	 */
+	public long getPoweredExpireTime() {
+		return poweredExpireTime;
+	}
+	
+	/**
+	 * Set powered up state and start the expiration time for when the powerup wears off
 	 * 
 	 * @param x True if powered up, false if otherwise
 	 * @see Player#isPoweredUp()
@@ -69,17 +78,17 @@ public class Player extends Actor {
 		isPowered = x;
 		// If powered up, start the timer and increase speed temporarily
 		if(isPowered) {
-			poweredExpireTime = System.currentTimeMillis() + 10000;
-			speed = 6;
+			poweredExpireTime = System.currentTimeMillis() + 5000; // 5 seconds is the average. See dossier for actual times (dependant on level)
+			speed = SPEED_DEFAULT+3.0f;
 		} else {
-			speed = 5;
+			speed = SPEED_DEFAULT;
 		}
 	}
 	
 	/**
 	 * Player act() method
 	 * This should evaluate if there is:
-	 * - a collission with a ghost and how to handle that interaction
+	 * - a collision with a ghost and how to handle that interaction
 	 * - a dot or cherry being eaten (call use() on the item)
 	 * - a next movement
 	 */

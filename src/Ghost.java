@@ -14,8 +14,10 @@ public class Ghost extends Actor {
 	private boolean needNewPath;
 	
 	// State
+	private final boolean originalTrapped;
 	private boolean trapped;
 	private boolean inFear;
+	private boolean fearBlink;
 	private boolean debugDrawPath;
 	
 	/**
@@ -31,6 +33,8 @@ public class Ghost extends Actor {
 		super(GameObject.OBJECT_GHOST, color, m, x, y);
 		needNewPath = true;
 		inFear = false;
+		fearBlink = false;
+		originalTrapped = trap;
 		trapped = trap;
 		debugDrawPath = false;
 	}
@@ -48,9 +52,11 @@ public class Ghost extends Actor {
 	 * Set fear status. AIManager interperates this setting for behavior
 	 * 
 	 * @param f Fear status, true if fearful
+	 * @param fb Fear blink, true if the ghost should be drawn in blinking mode (player's powerup is about to expire)
 	 */
-	public void setFear(boolean f) {
+	public void setFear(boolean f, boolean fb) {
 		inFear = f;
+		fearBlink = fb;
 	}
 	
 	/**
@@ -60,6 +66,15 @@ public class Ghost extends Actor {
 	 */
 	public boolean isTrapped() {
 		return trapped;
+	}
+	
+	/**
+	 * Get the initial (on map reset) trapped status.
+	 * 
+	 * @return True if the ghost is originally one of the trapped ghosts
+	 */
+	public boolean isOriginalTrapped() {
+		return originalTrapped;
 	}
 	
 	/**
@@ -195,8 +210,13 @@ public class Ghost extends Actor {
 		g.setColor(objColor);
 		
 		// Body
-		if(inFear)
-			g.setColor(Color.WHITE);
+		if(inFear) {
+			if(fearBlink)
+				g.setColor(Color.GRAY);
+			else
+				g.setColor(Color.WHITE);
+		}
+			
 		g.fillArc(screenX, screenY, map.CELL_SIZE, map.CELL_SIZE, 0, 360);
 		g.fillRect((int)((map.CELL_SIZE * positionX) + deltaX), (int)((map.CELL_SIZE * positionY)+(map.CELL_SIZE/2) + deltaY), map.CELL_SIZE, map.CELL_SIZE/2);
 		

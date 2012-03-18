@@ -9,16 +9,17 @@ import java.awt.Graphics2D;
  */
 public abstract class GameObject {
 	// Static type vars
-	public static final int OBJECT_DOT = 1;
-	public static final int OBJECT_POWERUP = 2;
-	public static final int OBJECT_CHERRY = 4;
-	public static final int OBJECT_PLAYER = 8;
-	public static final int OBJECT_GHOST = 16;
-	public static final int OBJECT_MARKER = 32; // Virtual
-	public static final int OBJECT_WALL = 64; // Virtual
-	public static final int OBJECT_TELEPORT = 128;
+	public static final int OBJECT_DOT = 1; // Item
+	public static final int OBJECT_POWERUP = 2; // Item
+	public static final int OBJECT_CHERRY = 4; // Item
+	public static final int OBJECT_PLAYER = 8; // Actor
+	public static final int OBJECT_GHOST = 16; // Actor
+	public static final int OBJECT_MARKER = 32; // Virtual (visible only in editor)
+	public static final int OBJECT_WALL = 64; // Collidable
+	public static final int OBJECT_TELEPORT = 128; // Collidable
+	public static final int OBJECT_JAILSPAWN = 256; // Virtual (data used in game & editor, visible in editor only)
 	
-	// Wall types (Walls aren't instanced GameObject's)
+	// Wall types (Walls aren't instanced GameObject's on their own)
 	public static final byte WALL_VERTICAL = 1;
 	public static final byte WALL_HORIZONTAL = 2;
 	public static final byte WALL_TOPLEFT = 3;
