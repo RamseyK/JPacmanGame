@@ -41,3 +41,4 @@ This is a basic implementation of Pacman in Java using standard libraries shippe
 * Good read on Path Finding Heuristics: http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html
 
 These resources have been backed up in the event the online links go down. See "external-resources.zip" in the Downloads section.
+
